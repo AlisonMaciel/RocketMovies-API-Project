@@ -6,13 +6,9 @@ class UserController {
     async create(request, response) {
         const { name, email, password } = request.body;
 
-        const normalizedEmail = email.trim().toLowerCase();
+        const gmail = await knex("user").where({email}).first()
 
-        const gmail = await knex("user")
-        .select("user.email")
-        .where("user.email", normalizedEmail)
-
-        if(gmail.length > 0) {
+        if(gmail) {
             throw new AppError("email já em uso")
         }
 
@@ -20,7 +16,7 @@ class UserController {
 
         await knex("user").insert({
             name,
-            email: normalizedEmail,
+            email,
             password: passwordHash
         })
  
@@ -65,7 +61,9 @@ class UserController {
         const upadatePassword = password ? await hash(password, 8) : user.password
 
         await knex("user")
+        .where({id: user_id})
         .where("id", user_id)
+        .where("user.id", user_id)
         .update({
             name: upadateName,
             email: upadateEmail,

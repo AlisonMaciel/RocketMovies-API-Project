@@ -27,67 +27,60 @@ class NotesCrontroller {
     }
 
     async show(request, response) {
-        const {user_id} = request.params
+        const {id} = request.params
 
-        const user = await knex("movie_notes")
-        .select(
-            "movie_notes.user_id",
-            "movie_notes.title",
-            "movie_notes.description",
-            "movie_notes.rating",
-            "movie_notes.id"
-        )
-        .where("movie_notes.user_id", user_id)
-        .first()
+        const note = await knex("movie_notes").where({id}).first()
+        const tags = await knex("movie_tags").where({note_id: id}).orderBy("name")
 
-        return response.json(user)
+        return response.json({
+            note,
+            tags
+        })
     }
 
     async index(request, response) {
         const {user_id, title, tag} = request.query
 
-        if(tag) {
-            const Tags = tag.split(",").map(tag => tag)
+        let notes;
 
-            const filterTags = await knex("movie_tags")
+        if(tag) {
+            const filterTags = JSON.parse(tag)
+            notes = await knex("movie_tags")
             .select([
+                "movie_notes.id",
                 "movie_notes.title",
                 "movie_notes.description",
                 "movie_notes.rating",
-                "movie_notes.user_id"
+                "movie_notes.created_at",
+                "movie_notes.user_id",
+                knex.raw("GROUP_CONCAT(movie_tags.name) as tags")
             ])
             .where("movie_notes.user_id", user_id)
             .whereLike("movie_notes.title", `%${title}%`)
-            .whereIn("name", Tags)
+            .whereIn("movie_tags.name", filterTags)
             .innerJoin("movie_notes", "movie_notes.id", "movie_tags.note_id")
             .orderBy("movie_notes.title")
+            .groupBy("movie_notes.id")
 
-            return response.json(filterTags)
-            
         } else {
-            
-            const filterTitle = await knex("movie_notes")
-            .select(
-                "movie_notes.title",
-                "movie_notes.user_id",
-                "movie_notes.description"
-            )
+            notes = await knex("movie_notes")
             .where("movie_notes.user_id", user_id)
-            .whereLike("movie_notes.title", `%${title}%`)
-            .first()
-    
-            return response.json(filterTitle)
+            .orderBy("movie_notes.title")
+            .groupBy("movie_notes.id")
         }
-
+        
+        notes = notes.map(note => {
+            note.tags = note.tags ? note.tags.split(",") : []
+            return note 
+        })
+        return response.json({notes})
     }
     
     async delete(request, response) {
-        const {user_id} = request.params
-        const {id} = request.query
+        const {user_id} = request.params  
 
         const delete_notes = await knex("movie_notes")
         .where("movie_notes.user_id", user_id)
-        .where("movie_notes.id", id)
         .delete()
 
         return response.status(200).json({

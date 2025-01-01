@@ -1,9 +1,11 @@
 require("express-async-errors")
+
 const express = require("express")
-const app = express()
 
 const routes = require("./SRC/routes/index.js")
 const AppError = require("./SRC/Utils/appError.js")
+
+const app = express()
 
 app.use(express.json())
 app.use(routes)

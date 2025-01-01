@@ -6,7 +6,7 @@ const notesController = new NotesCrontroller()
 
 notesRouter.get("/", notesController.index)
 notesRouter.post("/:user_id", notesController.create)
-notesRouter.get("/:user_id", notesController.show)
+notesRouter.get("/:id", notesController.show)
 notesRouter.delete("/:user_id", notesController.delete)
 
 module.exports = notesRouter
