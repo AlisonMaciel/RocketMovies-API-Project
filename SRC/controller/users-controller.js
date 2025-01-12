@@ -46,7 +46,7 @@ class UserController {
             throw new AppError("Esse email já esta em uso por outro usuario")
         }
 
-        if(!password_old) {
+        if(password && !password_old) {
             throw new AppError("Por favor digite a senha antiga para continuar")
         }
 
