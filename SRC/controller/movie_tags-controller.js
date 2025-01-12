@@ -2,11 +2,7 @@ const knex = require("../database/knex/index.js")
 
 class TagsController {
  async show(request, response) {
-<<<<<<< HEAD
     const user_id = request.user.id
-=======
-    const {user_id} = request.params
->>>>>>> 9259820b5542c29def31dbf21abd83603dc57208
 
     const filterTags = await knex("movie_tags")
     .select(

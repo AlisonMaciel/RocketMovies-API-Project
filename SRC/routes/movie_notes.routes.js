@@ -1,7 +1,7 @@
 const {Router} = require("express")
 const notesRouter = Router()
 
-const ensureAuthenticated = require("../hooks/ensureAuthenticated.js")
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated.js")
 const NotesCrontroller = require("../controller/movie_notes-controller.js")
 const notesController = new NotesCrontroller()
 

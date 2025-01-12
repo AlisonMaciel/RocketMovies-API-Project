@@ -4,7 +4,7 @@ const uploadsConfig = require("../configs/uploads.js")
 
 const userRouter = Router()
 
-const ensureAuthenticated = require("../hooks/ensureAuthenticated.js")
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated.js")
 const UserController = require("../controller/users-controller.js")
 const AvatarController = require("../controller/avatarController.js")
 const avatarController = new AvatarController()
