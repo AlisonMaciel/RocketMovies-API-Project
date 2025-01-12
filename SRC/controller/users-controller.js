@@ -6,9 +6,19 @@ class UserController {
     async create(request, response) {
         const { name, email, password } = request.body;
 
+<<<<<<< HEAD
         const gmail = await knex("user").where({email}).first()
 
         if(gmail) {
+=======
+        const normalizedEmail = email.trim().toLowerCase();
+
+        const gmail = await knex("user")
+        .select("user.email")
+        .where("user.email", normalizedEmail)
+
+        if(gmail.length > 0) {
+>>>>>>> 9259820b5542c29def31dbf21abd83603dc57208
             throw new AppError("email já em uso")
         }
 
@@ -16,7 +26,11 @@ class UserController {
 
         await knex("user").insert({
             name,
+<<<<<<< HEAD
             email, 
+=======
+            email: normalizedEmail,
+>>>>>>> 9259820b5542c29def31dbf21abd83603dc57208
             password: passwordHash
         })
  
@@ -25,7 +39,11 @@ class UserController {
 
     async upadate(request, response) {
         const {name, password, email, password_old} = request.body
+<<<<<<< HEAD
         const user_id = request.user.id
+=======
+        const {user_id} = request.params
+>>>>>>> 9259820b5542c29def31dbf21abd83603dc57208
 
         const user = await knex("user")
         .select("user.id", "user.password", "user.name")
@@ -39,7 +57,11 @@ class UserController {
         const existingEmail =  await knex("user")
         .select("user.email")
         .where("user.email", email)
+<<<<<<< HEAD
         .andWhereNot("user.id", user_id) 
+=======
+        .andWhereNot("user.id", user_id)
+>>>>>>> 9259820b5542c29def31dbf21abd83603dc57208
         .first()
 
         if(existingEmail) {
@@ -61,7 +83,11 @@ class UserController {
         const upadatePassword = password ? await hash(password, 8) : user.password
 
         await knex("user")
+<<<<<<< HEAD
         .where({id: user_id}) 
+=======
+        .where("id", user_id)
+>>>>>>> 9259820b5542c29def31dbf21abd83603dc57208
         .update({
             name: upadateName,
             email: upadateEmail,
@@ -73,7 +99,11 @@ class UserController {
     }
 
     async show(request, response) {
+<<<<<<< HEAD
         const user_id = request.user.id
+=======
+        const {user_id} = request.params
+>>>>>>> 9259820b5542c29def31dbf21abd83603dc57208
         
         const showUserInformation = await knex("user")
         .select(
@@ -95,10 +125,18 @@ class UserController {
     }
 
     async delete(request, response) {
+<<<<<<< HEAD
         const {user_id} = request.user.id
 
         const deleteUser = await knex("user")
         .where({id: user_id})
+=======
+        const {user_id} = request.params
+
+        const deleteUser = await knex("user")
+        .select("user.id")
+        .where("user.id", user_id)
+>>>>>>> 9259820b5542c29def31dbf21abd83603dc57208
         .first()
         .delete()
 
