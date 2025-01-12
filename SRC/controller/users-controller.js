@@ -16,7 +16,7 @@ class UserController {
 
         await knex("user").insert({
             name,
-            email,
+            email, 
             password: passwordHash
         })
  
@@ -25,7 +25,7 @@ class UserController {
 
     async upadate(request, response) {
         const {name, password, email, password_old} = request.body
-        const {user_id} = request.params
+        const user_id = request.user.id
 
         const user = await knex("user")
         .select("user.id", "user.password", "user.name")
@@ -39,7 +39,7 @@ class UserController {
         const existingEmail =  await knex("user")
         .select("user.email")
         .where("user.email", email)
-        .andWhereNot("user.id", user_id)
+        .andWhereNot("user.id", user_id) 
         .first()
 
         if(existingEmail) {
@@ -61,9 +61,7 @@ class UserController {
         const upadatePassword = password ? await hash(password, 8) : user.password
 
         await knex("user")
-        .where({id: user_id})
-        .where("id", user_id)
-        .where("user.id", user_id)
+        .where({id: user_id}) 
         .update({
             name: upadateName,
             email: upadateEmail,
@@ -75,7 +73,7 @@ class UserController {
     }
 
     async show(request, response) {
-        const {user_id} = request.params
+        const user_id = request.user.id
         
         const showUserInformation = await knex("user")
         .select(
@@ -97,11 +95,10 @@ class UserController {
     }
 
     async delete(request, response) {
-        const {user_id} = request.params
+        const {user_id} = request.user.id
 
         const deleteUser = await knex("user")
-        .select("user.id")
-        .where("user.id", user_id)
+        .where({id: user_id})
         .first()
         .delete()
 

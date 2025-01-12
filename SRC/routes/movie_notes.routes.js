@@ -1,11 +1,14 @@
 const {Router} = require("express")
 const notesRouter = Router()
 
+const ensureAuthenticated = require("../hooks/ensureAuthenticated.js")
 const NotesCrontroller = require("../controller/movie_notes-controller.js")
 const notesController = new NotesCrontroller()
 
+notesRouter.use(ensureAuthenticated)
+
 notesRouter.get("/", notesController.index)
-notesRouter.post("/:user_id", notesController.create)
+notesRouter.post("/", notesController.create)
 notesRouter.get("/:id", notesController.show)
 notesRouter.delete("/:user_id", notesController.delete)
 
