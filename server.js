@@ -1,4 +1,5 @@
 require("express-async-errors")
+require("dotenv/config")
 
 const express = require("express")
 const cors = require("cors")
@@ -12,7 +13,7 @@ app.use(express.json())
 app.use("/files", express.static(UPLOADS_FOLDER)) 
 app.use(routes)
 
-const PORT = 4444
+const PORT = process.env.PORT || 4444 
 
 app.use((error, request, response, next) => {
 
