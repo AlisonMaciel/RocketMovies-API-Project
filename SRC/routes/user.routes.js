@@ -16,6 +16,6 @@ userRouter.post("/", userController.create)
 userRouter.put("/", ensureAuthenticated, userController.upadate)
 userRouter.get("/", ensureAuthenticated, userController.show)
 userRouter.patch("/avatar", ensureAuthenticated, uploads.single("avatar"), avatarController.update) 
-userRouter.delete("/", ensureAuthenticated, userController.delete)
+userRouter.delete("/:id", userController.delete)
  
 module.exports = userRouter

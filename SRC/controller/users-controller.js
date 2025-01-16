@@ -95,10 +95,10 @@ class UserController {
     }
 
     async delete(request, response) {
-        const {user_id} = request.user.id
+        const {id} = request.params
 
         const deleteUser = await knex("user")
-        .where({id: user_id})
+        .where({id})
         .first()
         .delete()
 

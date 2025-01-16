@@ -8,6 +8,7 @@ module.exports = {
     },
     
     useNullAsDefault: true,
+    
     poll: {
       afterCreate: (conn, cb) => conn.run("PRAGMA foreign_keys = ON", cb)
     },
